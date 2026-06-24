@@ -6,7 +6,7 @@ const router = Router();
 
 router
   .route('/')
-  .get(auth, controller.list)        // GET  /cities
+  .get(controller.list)        // GET  /cities
   .post(auth, controller.create);    // POST /cities
 
 router
