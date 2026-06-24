@@ -7,15 +7,15 @@ const JWT_EXPIRES = process.env.JWT_EXPIRES || '7d';
 // POST /auth/login
 exports.login = async (req, res) => {
   try {
-    const { slug, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!slug || !password) {
-      return res.status(400).json({ error: 'Slug y contraseña son requeridos' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
     // Usar scope withPassword para incluir el campo password en la query
     const artist = await Artist.scope('withPassword').findOne({
-      where: { slug, is_active: true },
+      where: { email, is_active: true },
     });
 
     if (!artist) {
@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: artist.id, slug: artist.slug },
+      { id: artist.id, email: artist.email },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES },
     );
@@ -39,6 +39,7 @@ exports.login = async (req, res) => {
         id:     artist.id,
         name:   artist.name,
         slug:   artist.slug,
+        email:   artist.email,
         handle: artist.handle,
       },
     });

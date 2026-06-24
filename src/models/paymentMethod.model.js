@@ -9,10 +9,17 @@ PaymentMethod.init({
     autoIncrement: true,
     primaryKey: true,
   },
+  // Null = método global de la plataforma (ej: Bancolombia, Nequi)
+  // Con valor = método personalizado del artista
+  artist_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   name: {
     type: DataTypes.STRING(80),
     allowNull: false,
   },
+  // Datos específicos del artista: número de cuenta, teléfono, etc.
   detail: {
     type: DataTypes.STRING(200),
     allowNull: true,
@@ -33,8 +40,8 @@ PaymentMethod.init({
 });
 
 PaymentMethod.associate = (models) => {
+  PaymentMethod.belongsTo(models.Artist, { foreignKey: 'artist_id', as: 'artist' });
   PaymentMethod.hasMany(models.Payment, { foreignKey: 'method_id', as: 'payments' });
 };
-
 
 module.exports = PaymentMethod;

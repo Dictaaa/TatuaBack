@@ -1,20 +1,18 @@
-const { Router } = require('express');
-const { makeController } = require('../controllers/catalogs.controller');
-const auth = require('../middlewares/auth.middleware');
-const { PaymentMethod } = require('../models');
+const { Router }  = require('express');
+const controller  = require('../controllers/paymentMethods.controller');
+const auth        = require('../middlewares/auth.middleware');
 
-const controller = makeController(PaymentMethod, 'Payment method');
 const router = Router();
 
 router
   .route('/')
-  .get(controller.list)
-  .post(auth, controller.create);
+  .get(controller.list)           // GET  /payment-methods?artist_id=1  (public)
+  .post(auth, controller.create); // POST /payment-methods  (artist creates their own)
 
 router
   .route('/:id')
-  .get(controller.getOne)
-  .put(auth, controller.update)
-  .delete(auth, controller.remove);
+  .get(controller.getOne)           // GET    /payment-methods/:id
+  .put(auth, controller.update)     // PUT    /payment-methods/:id
+  .delete(auth, controller.remove); // DELETE /payment-methods/:id
 
 module.exports = router;
